@@ -1,20 +1,21 @@
-class Node():
-    """A node class for A* Pathfinding"""
+import sys
 
-    def __init__(self, parent=None, position=None):
+class Cavern():
+
+    def __init__(self, parent=None, x=None, y=None):
         self.parent = parent
-        self.position = position
-
         self.g = 0
         self.h = 0
         self.f = 0
+        self.x = x
+        self.y = y
+        self.connections = []
 
     def __eq__(self, other):
-        return self.position == other.position
+        return self.x == other.x & self.y == other.y
 
 
 def astar(maze, start, end):
-    """Returns a list of tuples as a path from the given start to the given end in the given maze"""
 
     # Create start and end node
     start_node = Node(None, start)
@@ -40,9 +41,9 @@ def astar(maze, start, end):
                 current_node = item
                 current_index = index
 
-        # Pop current off open list, add to closed list
         open_list.pop(current_index)
         closed_list.append(current_node)
+
 
         # Found the goal
         if current_node == end_node:
@@ -60,29 +61,22 @@ def astar(maze, start, end):
             # Get node position
             node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
 
-            # Make sure within range
+            # Make sure within range 
             if node_position[0] > (len(maze) - 1) or node_position[0] < 0 or node_position[1] > (len(maze[len(maze)-1]) -1) or node_position[1] < 0:
                 continue
 
-            # Make sure walkable terrain
             if maze[node_position[0]][node_position[1]] != 0:
                 continue
 
-            # Create new node
             new_node = Node(current_node, node_position)
 
-            # Append
             children.append(new_node)
 
-        # Loop through children
         for child in children:
-
-            # Child is on the closed list
             for closed_child in closed_list:
                 if child == closed_child:
                     continue
 
-            # Create the f, g, and h values
             child.g = current_node.g + 1
             child.h = ((child.position[0] - end_node.position[0]) ** 2) + ((child.position[1] - end_node.position[1]) ** 2)
             child.f = child.g + child.h
@@ -96,24 +90,33 @@ def astar(maze, start, end):
             open_list.append(child)
 
 
+def get_cave_string():
+    filename = sys.argv[1] + ".cav"
+    f = open(filename, 'r')
+    cave_string = f.read()
+    f.close()
+    return cave_string
+
 def main():
+    # 7,2,8,3,2,14,5,7,6,11,2,11,6,14,1,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,1,1,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0
+    cave_string = get_cave_string()
+    cave_string_split = cave_string.split(',') 
+    cavern_count = cave_string_split[0]
+    cavern_coords = cave_string_split[1:2 * int(cavern_count)+1]
+    cavern_connections = cave_string_split[len(cavern_coords) + 1:len(cave_string_split)]
 
-    maze = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    caverns = []
+    for i in range(0, len(cavern_coords), 2):
+        cavern = Cavern(None, cavern_coords[i], cavern_coords[i + 1])
+        caverns.append(cavern)
 
-    start = (0, 0)
-    end = (7, 6)
+    for cavern in caverns:
+        print("cavern at coords " + cavern.x + "," + cavern.y)
+    
 
-    path = astar(maze, start, end)
-    print(path)
+    
+
+
 
 
 if __name__ == '__main__':
