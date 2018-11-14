@@ -70,7 +70,6 @@ def astar(caverns, start, end):
             cavern_x = new_cavern.x
             cavern_y = new_cavern.y
 
-            caverns[new_cavern_index].parent = current_cavern
             children.append(caverns[new_cavern_index])
 
 
@@ -87,8 +86,11 @@ def astar(caverns, start, end):
             child.g = current_cavern.g + child_distance
             child.h = child_distance_end
             child.f = child.g + child.h
-
+            
+    
             print(f"current cavern: {str(cavern_id)}  - examining child: {str(child_id)} : d = {child_distance}, de = {child_distance_end}, g = {child.g}, h = {child.h}, f = {child.f}" )
+
+            
 
             # Child is already in the open list
             skip_child = False
@@ -98,7 +100,9 @@ def astar(caverns, start, end):
                     break 
 
             if skip_child == True:
-                    continue
+                continue
+
+            child.parent = current_cavern
 
             # Add the child to the open list
             open_list.append(child)
