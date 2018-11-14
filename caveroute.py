@@ -15,6 +15,7 @@ class Cavern():
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
+
 #start is start index and end is end index of caverns array
 def astar(caverns, start, end):
 
@@ -58,6 +59,8 @@ def astar(caverns, start, end):
             while current is not None:
                 path.append("(" + str(current.x) + "," + str(current.y) + ")")
                 current = current.parent
+                if len(path) > 50:
+                    break
             return path[::-1] # Return reversed path
 
         # Generate children
@@ -70,10 +73,10 @@ def astar(caverns, start, end):
             caverns[new_cavern_index].parent = current_cavern
             children.append(caverns[new_cavern_index])
 
+
         for child in children:
-            for closed_child in closed_list:
-                if child == closed_child:
-                    continue
+            if child in closed_list:
+                continue
             
             cavern_id = caverns.index(current_cavern)
             child_id = caverns.index(child)
@@ -88,12 +91,18 @@ def astar(caverns, start, end):
             print(f"current cavern: {str(cavern_id)}  - examining child: {str(child_id)} : d = {child_distance}, de = {child_distance_end}, g = {child.g}, h = {child.h}, f = {child.f}" )
 
             # Child is already in the open list
+            skip_child = False
             for open_node in open_list:
                 if child == open_node and child.g > open_node.g:
+                    skip_child = True
+                    break 
+
+            if skip_child == True:
                     continue
 
             # Add the child to the open list
             open_list.append(child)
+
 
         print("open_list = " + str(open_list))
 
