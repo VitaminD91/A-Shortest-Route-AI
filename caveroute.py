@@ -50,8 +50,6 @@ def astar(caverns, start, end):
         open_list.pop(current_index)
         closed_list.append(current_cavern)
 
-        print("current cavern: " + str(caverns.index(current_cavern)) + " current connections: " + str(current_cavern.connections))
-
         # Found the goal
         if current_cavern == end_cavern:
             path = []
