@@ -2,8 +2,7 @@
 @echo off
 set STARTTIME=%TIME%
 
-python caveroute.py
-pause
+python caveroute.py %*
 
 
 set ENDTIME=%TIME%

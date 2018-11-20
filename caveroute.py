@@ -57,7 +57,7 @@ def astar(caverns, start, end):
             path = []
             current = current_cavern
             while current is not None:
-                path.append("(" + str(current.x) + "," + str(current.y) + ")")
+                path.append(f"Cavern {caverns.index(current) +1}")
                 current = current.parent
                 if len(path) > 50:
                     break
@@ -86,11 +86,7 @@ def astar(caverns, start, end):
             child.g = current_cavern.g + child_distance
             child.h = child_distance_end
             child.f = child.g + child.h
-            
-    
-            print(f"current cavern: {str(cavern_id)}  - examining child: {str(child_id)} : d = {child_distance}, de = {child_distance_end}, g = {child.g}, h = {child.h}, f = {child.f}" )
-
-            
+                        
 
             # Child is already in the open list
             skip_child = False
@@ -108,8 +104,6 @@ def astar(caverns, start, end):
             open_list.append(child)
 
 
-        print("open_list = " + str(open_list))
-
 def get_cave_string():
     filename = sys.argv[1] + ".cav"
     f = open(filename, 'r')
@@ -118,7 +112,6 @@ def get_cave_string():
     return cave_string
 
 def main():
-    # 7,2,8,3,2,14,5,7,6,11,2,11,6,14,1,0,0,0,1,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,1,1,1,0,0,0,1,1,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0,0,1,0,0,0,0
     cave_string = get_cave_string()
     cave_string_split = cave_string.split(',') 
     cavern_count = int(cave_string_split[0])
@@ -133,19 +126,17 @@ def main():
 
     for cavern_index, i in enumerate(range(0, len(cavern_connections), cavern_count)):
         connections = cavern_connections[i:i + cavern_count]
-        print("cavern " + str(cavern_index) + ": " + str(connections))
         for connection_index, connection in enumerate(connections):
-            print(connection_index, connection)
             if connection == '1':
                 caverns[connection_index].connections.append(cavern_index) 
                  
 
-    for i, cavern in enumerate(caverns):
-        print("cavern " + str(i) + " at coords " + str(cavern.x) + "," + str(cavern.y) + ". connections: " + str(cavern.connections))
 
-  
     path = astar(caverns, 0, cavern_count-1)
-    print(path)
+    filename = sys.argv[1]
+    f = open(filename + ".csn", "w+")
+    f.write(str(path))
 
 if __name__ == '__main__':
     main()
+
