@@ -91,7 +91,7 @@ def astar(caverns, start, end):
             # Child is already in the open list
             skip_child = False
             for open_node in open_list:
-                if child == open_node and child.g > open_node.g:
+                if child == open_node and child.g >= open_node.g:
                     skip_child = True
                     break 
 
@@ -133,9 +133,13 @@ def main():
 
 
     path = astar(caverns, 0, cavern_count-1)
+    nice_path = ' -> '.join(map(str, path))
+    print(nice_path)
+    
     filename = sys.argv[1]
     f = open(filename + ".csn", "w+")
-    f.write(str(path))
+    f.write(str(nice_path))
+    
 
 if __name__ == '__main__':
     main()
