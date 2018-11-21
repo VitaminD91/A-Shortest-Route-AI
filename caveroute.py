@@ -55,11 +55,13 @@ def astar(caverns, start, end):
             path = []
             current = current_cavern
             while current is not None:
-                path.append(f"Cavern {caverns.index(current) +1}")
+                path.append(f"{caverns.index(current) +1}")
                 current = current.parent
                 if len(path) > 50:
                     break
             return path[::-1] # Return reversed path
+
+			
 
         # Generate children
         children = []
@@ -128,15 +130,28 @@ def main():
             if connection == '1':
                 caverns[connection_index].connections.append(cavern_index) 
                  
+	
 
+	
+	
 
     path = astar(caverns, 0, cavern_count-1)
-    nice_path = ' -> '.join(map(str, path))
-    print(nice_path)
+    #nice_path = ' -> '.join(map(str, path))
+    #print(path)
     
+   
+	
     filename = sys.argv[1]
     f = open(filename + ".csn", "w+")
-    f.write(str(nice_path))
+    if (path) == None:
+	    f.write("0")
+    else:
+        output = ""
+        for i in path:
+            output += i + " "
+        
+        f.write(output.rstrip())
+	
     
 
 if __name__ == '__main__':
